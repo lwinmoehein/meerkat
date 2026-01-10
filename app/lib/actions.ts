@@ -109,7 +109,7 @@ export async function createJob(prevState: CreateJobState, formData: FormData):P
         };
     }
     try{
-        const response = await axios.post(`${process.env.API_URL}/jobs`,validatedFields.data,
+        const response = await axios.post(`${process.env.MEERKAT_API_URL}/jobs`,validatedFields.data,
             {
                 headers:{
                     'Authorization':`Bearer ${token?.value}`
@@ -150,7 +150,7 @@ export async function updateJob(prevState: UpdateJobState, formData: FormData):P
         };
     }
     try{
-        const response = await axios.put(`${process.env.API_URL}/jobs/${validatedFields.data.id}`,validatedFields.data,
+        const response = await axios.put(`${process.env.MEERKAT_API_URL}/jobs/${validatedFields.data.id}`,validatedFields.data,
             {
                 headers:{
                     'Authorization':`Bearer ${token?.value}`
@@ -189,7 +189,7 @@ export async function register(prevState: RegisterState, formData: FormData):Pro
         };
     }
     try{
-        const response = await axios.post(`${process.env.API_URL}/auth/register`,validatedFields.data)
+        const response = await axios.post(`${process.env.MEERKAT_API_URL}/auth/register`,validatedFields.data)
         if(response.status!==201){
             return {
                 message: 'Error creating user.',
@@ -225,7 +225,7 @@ export async function login(prevState: LoginState, formData: FormData):Promise<L
         };
     }
     try{
-        const { data,status } = await axios.post(`${process.env.API_URL}/auth/login`,validatedFields.data)
+        const { data,status } = await axios.post(`${process.env.MEERKAT_API_URL}/auth/login`,validatedFields.data)
         if (status===200) {
             const user = data.user
             const token = data.token
@@ -246,7 +246,7 @@ export async function getJobs(){
     try{
         const token = cookies().get("access_token")
 
-        const { data,status } = await axios.get(`${process.env.API_URL}/jobs`,{
+        const { data,status } = await axios.get(`${process.env.MEERKAT_API_URL}/jobs`,{
             headers:{
                 'Authorization':`Bearer ${token?.value}`
             }
@@ -268,7 +268,7 @@ export async function getNotificationPagination(page:number=1){
     try{
         const token = cookies().get("access_token")
 
-        const { data,status } = await axios.get(`${process.env.API_URL}/notifications?page=${page}`,{
+        const { data,status } = await axios.get(`${process.env.MEERKAT_API_URL}/notifications?page=${page}`,{
             headers:{
                 'Authorization':`Bearer ${token?.value}`
             }
@@ -286,7 +286,7 @@ export async function deleteJob(jobId:string){
     try{
         const token = cookies().get("access_token")
 
-        const { data,status } = await axios.delete(`${process.env.API_URL}/jobs/${jobId}`,{
+        const { data,status } = await axios.delete(`${process.env.MEERKAT_API_URL}/jobs/${jobId}`,{
             headers:{
                 'Authorization':`Bearer ${token?.value}`
             }
@@ -302,7 +302,7 @@ export async function updateNotificationSetting(user:User,isEnabled:boolean){
     try{
         const token = cookies().get("access_token")
 
-        const { data,status } = await axios.put(`${process.env.API_URL}/auth/me`,
+        const { data,status } = await axios.put(`${process.env.MEERKAT_API_URL}/auth/me`,
             {
                 is_notifications_enabled:isEnabled
             },

@@ -4,7 +4,7 @@ import {cookies} from "next/headers";
 import {jwtVerify} from "jose";
 
 export async  function middleware(request: NextRequest) {
-    const SECRET_KEY = process.env.JWT_SECRET;
+    const SECRET_KEY = process.env.MEERKAT_JWT_SECRET;
     const token = cookies().get("access_token")
 
     if(token?.value===undefined || SECRET_KEY===null){
