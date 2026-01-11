@@ -1,32 +1,33 @@
 "use client"
 
-import {usePathname, useRouter} from "next/navigation";
-import {TabNav} from "@radix-ui/themes";
-import {HomeIcon} from "@radix-ui/react-icons";
+import { usePathname, useRouter } from "next/navigation";
+import { TabNav } from "@radix-ui/themes";
+import { HomeIcon } from "@radix-ui/react-icons";
 
 const links = [
     {
         name: 'Web Pages',
-        href: '/',
+        href: '/home',
         icon: HomeIcon
     },
     {
         name: 'Notifications',
-        href: '/notifications/1',
-        icon: HomeIcon },
+        href: '/home/notifications/1',
+        icon: HomeIcon
+    },
     {
         name: 'Settings',
-        href: '/settings',
+        href: '/home/settings',
         icon: null,
     }
 ];
-export function TabNavigation(){
+export function TabNavigation() {
     const pathname = usePathname()
     const router = useRouter()
 
 
-    const linkItems = links.map((link,index) =>
-        <TabNav.Link key={index} href={link.href} active={link.href===pathname}>
+    const linkItems = links.map((link, index) =>
+        <TabNav.Link key={index} href={link.href} active={link.href === pathname}>
             {link.name}
         </TabNav.Link>
     );

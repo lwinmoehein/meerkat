@@ -2,11 +2,9 @@
 
 import { z } from 'zod';
 import axios from 'axios';
-import {redirect} from "next/navigation";
-import jwt from 'next-auth/jwt'
-import {cookies} from "next/headers";
-import {revalidatePath} from "next/cache";
-import {Update} from "next/dist/build/swc";
+import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
 
 
 export type RegisterState = {
@@ -29,7 +27,7 @@ export type CreateJobState = {
     errors?: {
         name?: string[];
         url?: string[];
-        tags?:string[];
+        tags?: string[];
     };
     message?: string | null;
 };
@@ -37,64 +35,65 @@ export type UpdateJobState = {
     errors?: {
         name?: string[];
         url?: string[];
-        tags?:string[];
-        is_active?:string[]
+        tags?: string[];
+        is_active?: string[]
     };
     message?: string | null;
 };
 
 const Register = z.object({
     name: z.string({
-        invalid_type_error:"Please enter a valid user name."
-    }).max(30,"User name must not exceed more than 30 characters.").min(3,"User name must have at least 3 characters."),
+        invalid_type_error: "Please enter a valid user name."
+    }).max(30, "User name must not exceed more than 30 characters.").min(3, "User name must have at least 3 characters."),
     email: z.string({
-        invalid_type_error:"Please enter a valid email."
+        invalid_type_error: "Please enter a valid email."
     }).email("Email is not valid."),
     password: z.string({
-        invalid_type_error:"Please enter a valid password."
-    }).min(4,"Password must have at least 4 characters.").max(30,"Password shouldn't exceed 30 characters.")
+        invalid_type_error: "Please enter a valid password."
+    }).min(4, "Password must have at least 4 characters.").max(30, "Password shouldn't exceed 30 characters.")
 });
 
 const Login = z.object({
     email: z.string({
-        invalid_type_error:"Please enter a valid email."
+        invalid_type_error: "Please enter a valid email."
     }).email("Email is not valid."),
     password: z.string({
-        invalid_type_error:"Please enter a valid password."
+        invalid_type_error: "Please enter a valid password."
     })
 });
 
 const CreateJob = z.object({
     name: z.string({
-        invalid_type_error:"Invalid name",
-        required_error:"Invalid name"
-    }).min(3,"Invalid name").max(30,"Invalid name"),
+        invalid_type_error: "Invalid name",
+        required_error: "Invalid name"
+    }).min(3, "Invalid name").max(30, "Invalid name"),
     url: z.string().url(
         "Invalid URL"
-    ).max(255,"Invalid URL"),
-    tags: z.array(z.string().max(255,"Invalid tags"),{
-        invalid_type_error:"Invalid tags",
-        required_error:"Invalid tags"
+    ).max(255, "Invalid URL"),
+    tags: z.array(z.string().max(255, "Invalid tags"), {
+        invalid_type_error: "Invalid tags",
+        required_error: "Invalid tags"
     })
 });
 const UpdateJob = z.object({
-    id:z.string(),
+    id: z.string(),
     name: z.string({
-        invalid_type_error:"Invalid name",
-        required_error:"Invalid name"
-    }).min(3,"Invalid name").max(30,"Invalid name"),
+        invalid_type_error: "Invalid name",
+        required_error: "Invalid name"
+    }).min(3, "Invalid name").max(30, "Invalid name"),
     url: z.string().url(
         "Invalid URL"
-    ).max(255,"Invalid URL"),
-    tags: z.array(z.string().max(255,"Invalid tags"),{
-        invalid_type_error:"Invalid tags",
-        required_error:"Invalid tags"
+    ).max(255, "Invalid URL"),
+    tags: z.array(z.string().max(255, "Invalid tags"), {
+        invalid_type_error: "Invalid tags",
+        required_error: "Invalid tags"
     }),
-    is_active:z.string()
+    is_active: z.string()
 });
 
-export async function createJob(prevState: CreateJobState, formData: FormData):Promise<CreateJobState>{
-    const token = cookies().get("access_token")
+export async function createJob(prevState: CreateJobState, formData: FormData): Promise<CreateJobState> {
+    const cookieStore = await cookies()
+    const token = cookieStore.get("access_token")
 
     const validatedFields = CreateJob.safeParse({
         name: formData.get('name'),
@@ -108,31 +107,32 @@ export async function createJob(prevState: CreateJobState, formData: FormData):P
             errors: validatedFields.error.flatten().fieldErrors
         };
     }
-    try{
-        const response = await axios.post(`${process.env.MEERKAT_API_URL}/jobs`,validatedFields.data,
+    try {
+        const response = await axios.post(`${process.env.MEERKAT_API_URL}/jobs`, validatedFields.data,
             {
-                headers:{
-                    'Authorization':`Bearer ${token?.value}`
+                headers: {
+                    'Authorization': `Bearer ${token?.value}`
                 }
             })
-        if(response.status!==204){
+        if (response.status !== 204) {
             return {
                 message: 'Error adding a new site.'
             };
         }
-    }catch (error) {
+    } catch (error) {
         return {
             message: 'Error adding a new site.'
         };
     }
-    revalidatePath('/');
+    revalidatePath("/home")
     return {
         message: 'Success'
     };
 }
 
-export async function updateJob(prevState: UpdateJobState, formData: FormData):Promise<UpdateJobState>{
-    const token = cookies().get("access_token")
+export async function updateJob(prevState: UpdateJobState, formData: FormData): Promise<UpdateJobState> {
+    const cookieStore = await cookies()
+    const token = cookieStore.get("access_token")
 
     const validatedFields =
         UpdateJob.safeParse({
@@ -140,8 +140,8 @@ export async function updateJob(prevState: UpdateJobState, formData: FormData):P
             name: formData.get('name'),
             url: formData.get('url'),
             tags: formData.get('tags')?.toString().split(","),
-            is_active:formData.get('is_active')
-    });
+            is_active: formData.get('is_active')
+        });
 
 
     if (!validatedFields.success) {
@@ -149,31 +149,31 @@ export async function updateJob(prevState: UpdateJobState, formData: FormData):P
             errors: validatedFields.error.flatten().fieldErrors
         };
     }
-    try{
-        const response = await axios.put(`${process.env.MEERKAT_API_URL}/jobs/${validatedFields.data.id}`,validatedFields.data,
+    try {
+        const response = await axios.put(`${process.env.MEERKAT_API_URL}/jobs/${validatedFields.data.id}`, validatedFields.data,
             {
-                headers:{
-                    'Authorization':`Bearer ${token?.value}`
+                headers: {
+                    'Authorization': `Bearer ${token?.value}`
                 }
             })
-        if(response.status!==204){
+        if (response.status !== 204) {
             return {
                 message: 'Error adding a new site.'
             };
         }
-    }catch (error) {
+    } catch (error) {
         return {
             message: 'Error adding a new site.'
         };
     }
-    revalidatePath('/');
+    revalidatePath("/home")
     return {
         message: 'Success'
     };
 }
 
 
-export async function register(prevState: RegisterState, formData: FormData):Promise<RegisterState> {
+export async function register(prevState: RegisterState, formData: FormData): Promise<RegisterState> {
 
     const validatedFields = Register.safeParse({
         name: formData.get('name'),
@@ -188,21 +188,21 @@ export async function register(prevState: RegisterState, formData: FormData):Pro
             message: 'Missing Fields. Failed to Register User.',
         };
     }
-    try{
-        const response = await axios.post(`${process.env.MEERKAT_API_URL}/auth/register`,validatedFields.data)
-        if(response.status!==201){
+    try {
+        const response = await axios.post(`${process.env.MEERKAT_API_URL}/auth/register`, validatedFields.data)
+        if (response.status !== 201) {
             return {
                 message: 'Error creating user.',
-                errors:{
-                    email:["Email already taken."]
+                errors: {
+                    email: ["Email already taken."]
                 }
             };
         }
-    }catch (error) {
+    } catch (error) {
         return {
             message: 'Error creating user.',
-            errors:{
-                email:["Email already taken."]
+            errors: {
+                email: ["Email already taken."]
             }
         };
     }
@@ -210,7 +210,7 @@ export async function register(prevState: RegisterState, formData: FormData):Pro
     redirect('/login');
 }
 
-export async function login(prevState: LoginState, formData: FormData):Promise<LoginState> {
+export async function login(prevState: LoginState, formData: FormData): Promise<LoginState> {
 
     const validatedFields = Login.safeParse({
         email: formData.get('email'),
@@ -224,113 +224,129 @@ export async function login(prevState: LoginState, formData: FormData):Promise<L
             message: 'Missing Fields. Failed to Login User.',
         };
     }
-    try{
-        const { data,status } = await axios.post(`${process.env.MEERKAT_API_URL}/auth/login`,validatedFields.data)
-        if (status===200) {
+    try {
+        const { data, status } = await axios.post(`${process.env.MEERKAT_API_URL}/auth/login`, validatedFields.data)
+        if (status === 200) {
             const user = data.user
             const token = data.token
 
-            cookies().set('access_token', token)
-            cookies().set('user', JSON.stringify(user))
+            const cookieStore = await cookies()
+            cookieStore.set('access_token', token)
+            cookieStore.set('user', JSON.stringify(user))
         }
-    }catch (error) {
+    } catch (error: any) {
+        console.error("Login error:", error);
+        if (axios.isAxiosError(error)) {
+            console.error("Axios error details:", error.response?.data);
+            return {
+                message: error.response?.data?.message || error.message || 'Error logging in user.'
+            };
+        }
         return {
-            message: 'Error logging in user.'
+            message: error.message || 'Error logging in user.'
         };
     }
 
-    redirect('/');
+    redirect('/home');
 }
 
-export async function getJobs(){
-    try{
-        const token = cookies().get("access_token")
+export async function getJobs() {
+    try {
+        const cookieStore = await cookies()
+        const token = cookieStore.get("access_token")
 
-        const { data,status } = await axios.get(`${process.env.MEERKAT_API_URL}/jobs`,{
-            headers:{
-                'Authorization':`Bearer ${token?.value}`
+        const { data, status } = await axios.get(`${process.env.MEERKAT_API_URL}/jobs`, {
+            headers: {
+                'Authorization': `Bearer ${token?.value}`
             }
         })
-        if (status===200) {
-            const jobs:Job[] = data.data
+        if (status === 200) {
+            const jobs: Job[] = data.data
             return jobs;
         }
-    }catch (error) {
+    } catch (error) {
         return null;
     }
 }
-export async function updateUserSettings(user:User,isNotiEnabled:boolean){
+export async function updateUserSettings(user: User, isNotiEnabled: boolean) {
     user.notification = isNotiEnabled
-    cookies().set('user', JSON.stringify(user))
+    const cookieStore = await cookies()
+    cookieStore.set('user', JSON.stringify(user))
 }
 
-export async function getNotificationPagination(page:number=1){
-    try{
-        const token = cookies().get("access_token")
+export async function getNotificationPagination(page: number = 1) {
+    try {
+        const cookieStore = await cookies()
+        const token = cookieStore.get("access_token")
 
-        const { data,status } = await axios.get(`${process.env.MEERKAT_API_URL}/notifications?page=${page}`,{
-            headers:{
-                'Authorization':`Bearer ${token?.value}`
+        const { data, status } = await axios.get(`${process.env.MEERKAT_API_URL}/notifications?page=${page}`, {
+            headers: {
+                'Authorization': `Bearer ${token?.value}`
             }
         })
-        if (status===200) {
-            const notificationPagination:NotificationPagination = data
+        if (status === 200) {
+            const notificationPagination: NotificationPagination = data
             return notificationPagination
         }
-    }catch (error) {
+    } catch (error) {
         return null;
     }
 }
 
-export async function deleteJob(jobId:string){
-    try{
-        const token = cookies().get("access_token")
+export async function deleteJob(jobId: string) {
+    try {
+        const cookieStore = await cookies()
+        const token = cookieStore.get("access_token")
 
-        const { data,status } = await axios.delete(`${process.env.MEERKAT_API_URL}/jobs/${jobId}`,{
-            headers:{
-                'Authorization':`Bearer ${token?.value}`
+        const { data, status } = await axios.delete(`${process.env.MEERKAT_API_URL}/jobs/${jobId}`, {
+            headers: {
+                'Authorization': `Bearer ${token?.value}`
             }
         })
 
-    }catch (error) {
+    } catch (error) {
 
     }
-    revalidatePath("/")
+    revalidatePath("/home")
 }
 
-export async function updateNotificationSetting(user:User,isEnabled:boolean){
-    try{
-        const token = cookies().get("access_token")
+export async function updateNotificationSetting(user: User, isEnabled: boolean) {
+    try {
+        const cookieStore = await cookies()
+        const token = cookieStore.get("access_token")
 
-        const { data,status } = await axios.put(`${process.env.MEERKAT_API_URL}/auth/me`,
+        const { data, status } = await axios.put(`${process.env.MEERKAT_API_URL}/auth/me`,
             {
-                is_notifications_enabled:isEnabled
+                is_notifications_enabled: isEnabled
             },
             {
-            headers:{
-                'Authorization':`Bearer ${token?.value}`
-            }
-        })
-        if(status===204){
-            await updateUserSettings(user,isEnabled)
+                headers: {
+                    'Authorization': `Bearer ${token?.value}`
+                }
+            })
+        if (status === 204) {
+            await updateUserSettings(user, isEnabled)
         }
 
-    }catch (error) {
+    } catch (error) {
 
     }
-    revalidatePath("/settings")
+    revalidatePath('/home/settings')
 }
-export async function getToken(){
-    const token = cookies().get("access_token")
+export async function getToken() {
+    const cookieStore = await cookies()
+    const token = cookieStore.get("access_token")
     return token?.value
 }
-export async function getUser():Promise<User|null>{
-    const user = cookies().get("user")
-    return user==undefined?null:JSON.parse(user.value)
+export async function getUser(): Promise<User | null> {
+    const cookieStore = await cookies()
+    const user = cookieStore.get("user")
+    return user == undefined ? null : JSON.parse(user.value)
 }
-export async function signOut(){
-    cookies().set('access_token', "")
-    cookies().set('user', JSON.stringify(""))
+export async function signOut() {
+    const cookieStore = await cookies()
+    cookieStore.set('access_token', "")
+    cookieStore.set('user', JSON.stringify(""))
 
     redirect("/login")
 }
