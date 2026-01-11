@@ -31,7 +31,7 @@ export function LandingHero() {
                         </Heading>
 
                         <Text size="5" color="gray" style={{ maxWidth: '600px', margin: '0 auto', lineHeight: 1.6 }}>
-                            Meerkat silently watches your favorite websites for changes, so you don't have to.
+                            Meerkat silently watches your favorite websites for changes, so you don&apos;t have to.
                             Receive notifications via Email, Discord, or Slack instantly.
                         </Text>
                     </Box>
