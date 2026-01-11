@@ -5,7 +5,8 @@ import { jwtVerify } from "jose";
 
 export async function middleware(request: NextRequest) {
     const SECRET_KEY = process.env.MEERKAT_JWT_SECRET;
-    const token = cookies().get("access_token")
+    const cookieStore = await cookies()
+    const token = cookieStore.get("access_token")
 
     if (token?.value === undefined || SECRET_KEY === null) {
         return NextResponse.redirect(new URL('/login', request.url))
