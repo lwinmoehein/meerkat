@@ -2,31 +2,13 @@ import '@radix-ui/themes/styles.css';
 import { Box, Flex, Text, Heading, Button, Card, Grid } from "@radix-ui/themes";
 import { BellIcon, EyeOpenIcon, RocketIcon, LightningBoltIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
-import Image from "next/image";
+import { LandingNav } from "@/components/landing/nav";
 
 export default function LandingPage() {
     return (
         <Box>
             {/* Navigation */}
-            <Box style={{ borderBottom: '1px solid var(--gray-a5)', padding: '16px' }}>
-                <Flex justify="between" align="center" style={{ maxWidth: '1200px', margin: '0 auto' }}>
-                    <Link href="/landing" style={{ textDecoration: 'none' }}>
-                        <Flex align="center" gap="2">
-                            <Image src="/meerkat.png" width={40} height={40} alt="Meerkat" />
-                            <Text size="6" weight="bold">Meerkat</Text>
-                        </Flex>
-                    </Link>
-
-                    <Flex gap="3" align="center">
-                        <Link href="/login">
-                            <Button variant="ghost" size="3">Log in</Button>
-                        </Link>
-                        <Link href="/register">
-                            <Button size="3">Get Started</Button>
-                        </Link>
-                    </Flex>
-                </Flex>
-            </Box>
+            <LandingNav />
 
             {/* Hero Section */}
             <Box style={{ padding: '80px 16px', textAlign: 'center' }}>
