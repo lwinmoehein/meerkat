@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, Box, Dialog, Flex, Text, TextField, Badge, Spinner, Card } from "@radix-ui/themes";
-import { ArrowRightIcon, CheckIcon, PlusIcon } from "@radix-ui/react-icons";
+import { ArrowRightIcon, CheckIcon, PlusIcon, Cross2Icon } from "@radix-ui/react-icons";
 import React, { useEffect, useState } from "react";
 import { Form } from "@radix-ui/react-form";
 import { useActionState } from "react";
@@ -21,10 +21,21 @@ export default function AddJobDialog({ user }: { user: User | null }) {
     const [tag, setTag] = useState("")
 
 
+    const removeTag = (indexToRemove: number) => {
+        setTags(tags.filter((_, index) => index !== indexToRemove));
+    };
+
     const tagItems = tags.map((t, index) =>
-        <Box key={index} >
-            <Badge >{t}</Badge>
-        </Box>
+        <Badge
+            key={index}
+            style={{ cursor: 'pointer' }}
+            onClick={() => removeTag(index)}
+        >
+            <Flex gap="1" align="center">
+                {t}
+                <Cross2Icon width="12" height="12" />
+            </Flex>
+        </Badge>
     );
 
     useEffect(() => {
@@ -35,14 +46,8 @@ export default function AddJobDialog({ user }: { user: User | null }) {
     }, [state.message]);
 
     useEffect(() => {
-        setTagsValueString("")
-        tags.map((t, index) => {
-            if (tagsValueString !== "")
-                setTagsValueString(tagsValueString + "," + t)
-            else
-                setTagsValueString(t)
-        });
-    }, [tags])
+        setTagsValueString(tags.join(","));
+    }, [tags]);
 
     const addToTags = (e: any) => {
         e.preventDefault()

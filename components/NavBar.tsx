@@ -21,10 +21,10 @@ export default async function NavBar() {
                         src={'/meerkat.png'}
                         width={'80'}
                         height={'80'}
-                        alt={'MeerkatSentry'}
+                        alt={'Meerkat Sentry'}
                     />
                     <Flex direction={'column'}>
-                        <Text weight={'bold'} size={'8'}>MeerkatSentry</Text>
+                        <Text weight={'bold'} size={'8'}>Meerkat Sentry</Text>
                         <Text size={'1'}>Watch web pages and get notified.</Text>
                     </Flex>
                 </Flex>

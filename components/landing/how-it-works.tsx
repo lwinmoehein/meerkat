@@ -9,7 +9,7 @@ export function LandingHowItWorks() {
             <Container size="3">
                 <Flex direction="column" gap="8" align="center">
                     <Box style={{ textAlign: 'center', maxWidth: '700px' }}>
-                        <Heading size="8" mb="4" style={{ color: 'white' }}>How MeerkatSentry Works</Heading>
+                        <Heading size="8" mb="4" style={{ color: 'white' }}>How Meerkat Sentry Works</Heading>
                         <Text size="4" style={{ color: 'var(--gray-11)' }}>
                             Simple, powerful monitoring in three easy steps.
                         </Text>
@@ -27,7 +27,7 @@ export function LandingHowItWorks() {
                             src="/meerkat_how_it_works.svg"
                             width={800}
                             height={400}
-                            alt="How MeerkatSentry Works"
+                            alt="How Meerkat Sentry Works"
                             style={{
                                 width: '100%',
                                 height: 'auto',

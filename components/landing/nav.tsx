@@ -34,7 +34,7 @@ export function LandingNav() {
                                 src="/meerkat.png"
                                 width={40}
                                 height={40}
-                                alt="MeerkatSentry"
+                                alt="Meerkat Sentry"
                                 style={{ width: '40px', height: '40px' }}
                             />
                             <Text
@@ -45,7 +45,7 @@ export function LandingNav() {
                                     whiteSpace: 'nowrap'
                                 }}
                             >
-                                MeerkatSentry
+                                Meerkat Sentry
                             </Text>
                         </Flex>
                     </Link>

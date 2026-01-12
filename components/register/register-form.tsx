@@ -29,8 +29,8 @@ export default function RegisterForm() {
                 </Link>
                 {/* Logo Section */}
                 <Flex align="center" justify="center" direction="column" gap="4" mb="4">
-                    <Image src="/meerkat.png" width={80} height={80} alt="MeerkatSentry" />
-                    <Heading size="6" weight="bold">MeerkatSentry</Heading>
+                    <Image src="/meerkat.png" width={80} height={80} alt="Meerkat Sentry" />
+                    <Heading size="6" weight="bold">Meerkat Sentry</Heading>
                 </Flex>
 
                 <Card size="4">
