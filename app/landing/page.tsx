@@ -3,6 +3,12 @@ import { Box, Flex, Text, Heading, Button, Card, Grid } from "@radix-ui/themes";
 import { BellIcon, EyeOpenIcon, RocketIcon, LightningBoltIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { LandingNav } from "@/components/landing/nav";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Landing',
+    description: "Start monitoring websites for free. Track changes on any webpage and get instant email notifications. Perfect for job seekers, shoppers, and anyone who needs to stay updated.",
+};
 
 export default function LandingPage() {
     return (
