@@ -38,7 +38,7 @@ export default async function Page({ params }: { params: Promise<{ page: number 
                                     <Text size={'2'}>
                                         {notification.data.title}</Text>
                                     <Text>
-                                        <Text size={'1'}>Page Link :</Text> <Link size={'1'} href={notification.data.job_url}>{notification.data.job_url}</Link>
+                                        <Text size={'1'}>Page Link :</Text> <Link target={'_blank'} size={'1'} href={notification.data.job_url}>{notification.data.job_url}</Link>
                                     </Text>
                                 </Flex>
                             </Card>
