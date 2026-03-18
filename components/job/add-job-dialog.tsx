@@ -1,29 +1,35 @@
 "use client";
 
-import { Button, Box, Dialog, Flex, Text, TextField, Badge, Spinner, Card } from "@radix-ui/themes";
-import { ArrowRightIcon, CheckIcon, PlusIcon, Cross2Icon } from "@radix-ui/react-icons";
+import { Button, Box, Dialog, Flex, Text, TextField, Badge, Checkbox, Card } from "@radix-ui/themes";
+import { CheckIcon, PlusIcon, Cross2Icon } from "@radix-ui/react-icons";
 import React, { useEffect, useState } from "react";
 import { Form } from "@radix-ui/react-form";
 import { useActionState } from "react";
 import { createJob } from "@/app/lib/actions";
 import { SubmitButton } from "@/components/submit-button";
+import Link from "next/link";
 
 
 export default function AddJobDialog({ user }: { user: User | null }) {
 
     const initialState = { message: null, errors: {} };
-    const [state, dispatch, isPending] = useActionState(createJob, initialState);
+    const [state, dispatch] = useActionState(createJob, initialState);
     const [open, setOpen] = useState(false);
 
 
     const [tags, setTags] = useState<string[]>([])
     const [tagsValueString, setTagsValueString] = useState("")
     const [tag, setTag] = useState("")
+    const [termsAccepted,setTermsAccepted] = useState(false)
 
 
     const removeTag = (indexToRemove: number) => {
         setTags(tags.filter((_, index) => index !== indexToRemove));
     };
+
+    const onTermsChanged = (value:boolean)=>{
+        setTermsAccepted(value);
+    }
 
     const tagItems = tags.map((t, index) =>
         <Badge
@@ -73,6 +79,23 @@ export default function AddJobDialog({ user }: { user: User | null }) {
                 <Dialog.Description size="2" mb="4">
                     Add a new web page to watch changes and get notified.
                     When there are changes related to this job&apos;s tags , we will send email to <Text color={'sky'}> {user?.email}</Text>
+
+                    <Box mt="3" p="0"  style={{ borderColor: 'tomato', borderRadius: '5',borderStyle:'solid',borderWidth:'1' }}>
+                        <Flex gap="2" align="start">
+                            <Checkbox id="terms" required onCheckedChange={onTermsChanged}/>
+                            <Box >
+                                <Text color="tomato" as="label" size="1" htmlFor="terms">
+                                    I agree to the <Link href="#"  >Terms of Service</Link> and confirm that:
+                                </Text>
+                                <ul style={{ margin: '4px 0 0 16px', padding: 0, color: 'tomato', fontSize: '11px',listStyle:'initial' }}>
+                                    <li>I will not monitor illegal content or unauthorized private data.</li>
+                                    <li>I have the legal right or permission to access this webpage.</li>
+                                    <li>I will not use this tool to bypass security or perform DDoS attacks.</li>
+                                    <li>I am responsible for all content retrieved from the target URL.</li>
+                                </ul>
+                            </Box>
+                        </Flex>
+                    </Box>
                 </Dialog.Description>
                 <Form action={dispatch}>
                     <Flex direction="column" gap="3">
@@ -162,7 +185,7 @@ export default function AddJobDialog({ user }: { user: User | null }) {
                                 Cancel
                             </Button>
                         </Dialog.Close>
-                        <SubmitButton name={'Confirm'}>
+                        <SubmitButton disabled={!termsAccepted} name={'Confirm'}>
                             <CheckIcon />
                         </SubmitButton>
                     </Flex>
