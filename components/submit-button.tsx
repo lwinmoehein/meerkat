@@ -4,7 +4,7 @@ import { useFormStatus } from 'react-dom'
 import {Button, Spinner} from "@radix-ui/themes";
 import React from "react";
 
-export function SubmitButton({ name,children,disabled=false }:{name:string,children:React.ReactNode,disabled:boolean}) {
+export function SubmitButton({ name,children,disabled=false }:{name:string,children:React.ReactNode,disabled?:boolean}) {
     const { pending } = useFormStatus()
 
     return (
